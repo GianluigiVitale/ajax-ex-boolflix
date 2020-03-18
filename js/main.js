@@ -76,10 +76,27 @@
                         }
                     }
 
+                    var lingua = '';
+                    if (film.original_language == 'it') {
+                        lingua += ('<img src="img/italy.png" alt="italy flag">');
+                    } else if (film.original_language == 'en') {
+                        lingua += ('<img src="img/united-states.png" alt="united-states flag">');
+                    } else if (film.original_language == 'fr') {
+                        lingua += ('<img src="img/france.png" alt="france flag">');
+                    } else if (film.original_language == 'es') {
+                        lingua += ('<img src="img/spain.png" alt="spain flag">');
+                    } else if (film.original_language == 'de') {
+                        lingua += ('<img src="img/germany.png" alt="germany flag">');
+                    } else if (film.original_language == 'zh') {
+                        lingua += ('<img src="img/china.png" alt="china flag">');
+                    } else {
+                        lingua += ('<img src="img/world.png" alt="world icon">');
+                    }
+
                     var valoriFilm = {
                         titolo: film.title,
                         titoloOriginale: film.original_title,
-                        lingua: film.original_language,
+                        lingua: lingua,
                         voto: stelle
                     }
                     var filmTemplate = template(valoriFilm);
