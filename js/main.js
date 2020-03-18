@@ -43,19 +43,19 @@
     //     }
     // });
 
-    $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro #message
+    $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
         if (event.keyCode === 13) {             // se si preme il tasto invio
             $('button').click();
         }
     });
 
 
-    $('button').click(function() {
+    $('button').click(function() {  // al click del 'button' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
         $('.ricerca-utente-film').empty();
         $('.ricerca-utente-serieTV').empty();
 
-        $.ajax({
+        $.ajax({        // chiamata ajax per FILM
             url: 'https://api.themoviedb.org/3/search/movie',
             data: {
                 api_key: '6bd6b0823733332d6f67f8c58faac567',
@@ -86,7 +86,7 @@
             }
         });
 
-        $.ajax({
+        $.ajax({    // Chiamata ajax per SERIE TV
             url: 'https://api.themoviedb.org/3/search/tv',
             data: {
                 api_key: '6bd6b0823733332d6f67f8c58faac567',
@@ -122,7 +122,7 @@
     // FUNZIONI USATE
 
 
-    function valutazioneStelle(film) {     // WARNING: variabile globale 'film'
+    function valutazioneStelle(film) {     // WARNING: variabile globale 'film'     FUNZIONE che serve per dare una valutazione con le stelle da 1 a 5
         var votoFilmArrotondatoDa1a5 = Math.ceil(film.vote_average / 2);
         var stelle = '';
         for (var j = 1; j <= 5; j++) {
@@ -135,7 +135,7 @@
         return stelle;
     }
 
-    function originalLanguage(film) {   // WARNING: variabile globale 'film'
+    function originalLanguage(film) {   // WARNING: variabile globale 'film'    FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
         var lingua = '';
         if (film.original_language == 'it') {
             lingua += ('<img src="img/italy.png" alt="italy flag">');
