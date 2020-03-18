@@ -1,5 +1,5 @@
 // $(document).ready(function(){
-    var source = $('#template-film').html();
+    var source = $('#template-film-serietv').html();
     var template = Handlebars.compile(source);
 
 
@@ -53,6 +53,8 @@
     $('button').click(function() {
         var valoreInput = $('input').val();
         $('.ricerca-utente-film').empty();
+        $('.ricerca-utente-serieTV').empty();
+
         $.ajax({
             url: 'https://api.themoviedb.org/3/search/movie',
             data: {
@@ -77,6 +79,37 @@
                     }
                     var filmTemplate = template(valoriFilm);
                     $('.ricerca-utente-film').append(filmTemplate);
+                }
+            },
+            error: function () {
+                alert('errore generico');
+            }
+        });
+
+        $.ajax({
+            url: 'https://api.themoviedb.org/3/search/tv',
+            data: {
+                api_key: '6bd6b0823733332d6f67f8c58faac567',
+                query: valoreInput,
+                language: 'it-IT'
+            },
+            method: 'GET',
+            success: function (data) {
+                var serieTV = data.results;
+                for (var i = 0; i < serieTV.length; i++) {
+                    var serie = serieTV[i];
+
+                    var stelle = valutazioneStelle(serie);
+                    var lingua = originalLanguage(serie);
+
+                    var valoriSerieTV = {
+                        titolo: serie.name,
+                        titoloOriginale: serie.original_name,
+                        lingua: lingua,
+                        voto: stelle
+                    }
+                    var serieTvTemplate = template(valoriSerieTV);
+                    $('.ricerca-utente-serieTV').append(serieTvTemplate);
                 }
             },
             error: function () {
