@@ -5,6 +5,27 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: gray;
+}
+
+/* stile clasi generali */
+.inline {
+    display: inline-block;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.img-line {
+    position: relative;
+    top: -6px;
+}
+/* classi generali */
+
+
+/* stile INPUT generale */
 input {
     border: none;
 }
@@ -12,10 +33,14 @@ input {
 input:focus {
     outline: none;
 }
+/* fine INPUT generale */
 
+
+/* STILE HEADER */
 header {
     background-color: black;
     height: 80px;
+    margin-bottom: 50px;
 }
 
 .container {
@@ -51,18 +76,74 @@ header {
 .fa-search:hover {
     cursor: pointer;
 }
+/* FINE STILE HEADER */
 
-
-.info-film-serietv {
-    margin: 25px;
+.ricerca-utente-film, .ricerca-utente-serieTV {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
+
+
+
+/* STILE TEMPLATE HANDLEBARS */
+.info-film-serietv {
+    margin: 5px;
+    margin-bottom: 15px;
+    position: relative;
+    width: 342px;
+    height: 513px;
+}
+
+.info-film-serietv:hover .contenuto {
+    display: block;
+}
+
+.copertina {
+    border: 1px solid white;
+    width: 342px;
+    height: 513px;
+}
+
+.contenuto {
+    display: none;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    background-color: black;
+    color: white;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    z-index: 1;
+    padding: 15px;
+}
+
+.contenuto p {
+    padding-bottom: 15px;
+}
+
+.fas.fa-star {
+    color: yellow;
+    padding: 3px;
+}
+
+.far.fa-star {
+    color: white;
+    padding: 3px;
+}
+
+.lingua-originale {
+    width: 25px;
+}
+/* FINE STILE TEMPLATE HANDLEBARS */
+
+
+
+
+
 
 .bottom-page {
     position: absolute;
     bottom: 0;
     right: 0;
-}
-
-.lingua-originale {
-    width: 25px;
 }

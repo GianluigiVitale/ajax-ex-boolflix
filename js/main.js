@@ -102,7 +102,7 @@
     }
 
     function controlloCopertina(film) {     // WARNING: variabile globale 'film' FUNZIONE che controlla se e' presente una copertina (la visualizza) altrimenti imposta una copertina generica
-        var dimensioneImmagine = 'w185';
+        var dimensioneImmagine = 'w342';
         if (film.poster_path == null) {
             var copertina = 'img/no-image.png';
         } else {
