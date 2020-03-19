@@ -10,7 +10,7 @@
     });
 
 
-    $('.fa-search').click(function() {  // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
+    $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
         if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
             $('.ricerca-utente-film').empty();
@@ -67,7 +67,7 @@
     }
 
 
-    function valutazioneStelle(film) {     // WARNING: variabile globale 'film'     FUNZIONE che serve per dare una valutazione con le stelle da 1 a 5
+    function valutazioneStelle(film) {          // FUNZIONE che serve per dare una valutazione con le stelle da 1 a 5
         var votoFilmArrotondatoDa1a5 = Math.ceil(film.vote_average / 2);
         var stelle = '';
         for (var j = 1; j <= 5; j++) {
@@ -81,7 +81,7 @@
     }
 
 
-    function originalLanguage(film) {   // WARNING: variabile globale 'film'    FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
+    function originalLanguage(film) {       // FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
         var lingua = '';
         if (film.original_language == 'it') {
             lingua += ('<img class="lingua-originale" src="img/italy.png" alt="italy flag">');
@@ -101,7 +101,7 @@
         return lingua;
     }
 
-    function controlloCopertina(film) {     // WARNING: variabile globale 'film' FUNZIONE che controlla se e' presente una copertina (la visualizza) altrimenti imposta una copertina generica
+    function controlloCopertina(film) {      // FUNZIONE che controlla se e' presente una copertina (la visualizza) altrimenti imposta una copertina generica
         var dimensioneImmagine = 'w342';
         if (film.poster_path == null) {
             var copertina = 'img/no-image.png';

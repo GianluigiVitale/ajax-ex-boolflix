@@ -9,7 +9,7 @@ body {
     background-color: gray;
 }
 
-/* stile clasi generali */
+/* stile classi generali */
 .inline {
     display: inline-block;
 }
@@ -78,12 +78,12 @@ header {
 }
 /* FINE STILE HEADER */
 
+
 .ricerca-utente-film, .ricerca-utente-serieTV {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
-
 
 
 /* STILE TEMPLATE HANDLEBARS */
@@ -142,8 +142,8 @@ header {
 
 
 
-.bottom-page {
+/* .bottom-page {
     position: absolute;
     bottom: 0;
     right: 0;
-}
+} */
