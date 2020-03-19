@@ -3,46 +3,6 @@
     var template = Handlebars.compile(source);
 
 
-    // var valoreInput = $('input').val();
-    // $('.ricerca-utente-film').empty();
-    // $.ajax({
-    //     url: 'https://api.themoviedb.org/3/search/movie',
-    //     data: {
-    //         api_key: '6bd6b0823733332d6f67f8c58faac567',
-    //         query: valoreInput,
-    //         language: 'it-IT'
-    //     },
-    //     method: 'GET',
-    //     success: function (data) {
-    //         var films = data.results;
-    //         for (var i = 0; i < films.length; i++) {
-    //             var film = films[i];
-    //             var votoFilmArrotondatoDa1a5 = Math.ceil(film.vote_average / 2);
-    //
-    //             var stelle = [];
-    //             for (var j = 1; j <= 5; j++) {
-    //                 if (j <= votoFilmArrotondatoDa1a5) {
-    //                     stelle.push('<i class="fas fa-star"></i>');
-    //                 } else {
-    //                     stelle.push('<i class="far fa-star"></i>');
-    //                 }
-    //             }
-    //
-    //             var valoriFilm = {
-    //                 titolo: film.title,
-    //                 titoloOriginale: film.original_title,
-    //                 lingua: film.original_language,
-    //                 voto: stelle
-    //             }
-    //             var filmTemplate = template(valoriFilm);
-    //             $('.ricerca-utente-film').append(filmTemplate);
-    //         }
-    //     },
-    //     error: function () {
-    //         alert('errore generico');
-    //     }
-    // });
-
     $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
         if (event.keyCode === 13) {             // se si preme il tasto invio
             $('button').click();
@@ -55,8 +15,20 @@
         $('.ricerca-utente-film').empty();
         $('.ricerca-utente-serieTV').empty();
 
+        chiamataAjax('https://api.themoviedb.org/3/search/movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
+        chiamataAjax('https://api.themoviedb.org/3/search/tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+
+    });
+
+
+
+    // FUNZIONI USATE
+
+
+
+    function chiamataAjax(url, titolo, titoloOriginale, appendFilmOSerie, valoreInput) {
         $.ajax({        // chiamata ajax per FILM
-            url: 'https://api.themoviedb.org/3/search/movie',
+            url: url,
             data: {
                 api_key: '6bd6b0823733332d6f67f8c58faac567',
                 query: valoreInput,
@@ -72,54 +44,20 @@
                     var lingua = originalLanguage(film);
 
                     var valoriFilm = {
-                        titolo: film.title,
-                        titoloOriginale: film.original_title,
+                        titolo: film[titolo],
+                        titoloOriginale: film[titoloOriginale],
                         lingua: lingua,
                         voto: stelle
                     }
                     var filmTemplate = template(valoriFilm);
-                    $('.ricerca-utente-film').append(filmTemplate);
+                    $(appendFilmOSerie).append(filmTemplate);
                 }
             },
             error: function () {
                 alert('errore generico');
             }
         });
-
-        $.ajax({    // Chiamata ajax per SERIE TV
-            url: 'https://api.themoviedb.org/3/search/tv',
-            data: {
-                api_key: '6bd6b0823733332d6f67f8c58faac567',
-                query: valoreInput,
-                language: 'it-IT'
-            },
-            method: 'GET',
-            success: function (data) {
-                var serieTV = data.results;
-                for (var i = 0; i < serieTV.length; i++) {
-                    var serie = serieTV[i];
-
-                    var stelle = valutazioneStelle(serie);
-                    var lingua = originalLanguage(serie);
-
-                    var valoriSerieTV = {
-                        titolo: serie.name,
-                        titoloOriginale: serie.original_name,
-                        lingua: lingua,
-                        voto: stelle
-                    }
-                    var serieTvTemplate = template(valoriSerieTV);
-                    $('.ricerca-utente-serieTV').append(serieTvTemplate);
-                }
-            },
-            error: function () {
-                alert('errore generico');
-            }
-        });
-    });
-
-
-    // FUNZIONI USATE
+    }
 
 
     function valutazioneStelle(film) {     // WARNING: variabile globale 'film'     FUNZIONE che serve per dare una valutazione con le stelle da 1 a 5
@@ -134,6 +72,7 @@
         }
         return stelle;
     }
+
 
     function originalLanguage(film) {   // WARNING: variabile globale 'film'    FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
         var lingua = '';
