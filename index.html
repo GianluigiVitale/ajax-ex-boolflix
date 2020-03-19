@@ -11,10 +11,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js" charset="utf-8"></script>
     </head>
     <body>
-        <div class="container">
-            <input type="text" name="" value="fantozzi">
-            <button type="button" name="button">INVIO</button>
-        </div>
+
+        <header>
+            <div class="container">
+                <div class="input-box">
+                    <input type="text" name="" placeholder="Cerca un film o una serie tv..." value="">
+                    <i class="fas fa-search"></i>
+                </div>
+                <p>BOOLFLIX</p>
+            </div>
+        </header>
+
 
         <div class="ricerca-utente-film"></div>
         <div class="ricerca-utente-serieTV"></div>
@@ -27,6 +34,7 @@
                 <p>{{titoloOriginale}}</p>
                 {{{lingua}}}
                 <p>{{{voto}}}</p>
+                <p>{{overview}}</p>
             </div>
         </script>
 

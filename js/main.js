@@ -5,18 +5,22 @@
 
     $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
         if (event.keyCode === 13) {             // se si preme il tasto invio
-            $('button').click();
+            $('.fa-search').click();
         }
     });
 
 
-    $('button').click(function() {  // al click del 'button' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
+    $('.fa-search').click(function() {  // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
-        $('.ricerca-utente-film').empty();
-        $('.ricerca-utente-serieTV').empty();
+        if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
+            $('.ricerca-utente-film').empty();
+            $('.ricerca-utente-serieTV').empty();
 
-        chiamataAjax('https://api.themoviedb.org/3/search/movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
-        chiamataAjax('https://api.themoviedb.org/3/search/tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+            chiamataAjax('https://api.themoviedb.org/3/search/movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
+            chiamataAjax('https://api.themoviedb.org/3/search/tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+        } else {
+            alert('Pefavore inserisci un film o serie tv');
+        }
     });
 
 
@@ -49,7 +53,8 @@
                         titolo: film[titolo],
                         titoloOriginale: film[titoloOriginale],
                         lingua: lingua,
-                        voto: stelle
+                        voto: stelle,
+                        overview: film.overview
                     }
                     var filmTemplate = template(valoriFilm);
                     $(appendFilmOSerie).append(filmTemplate);

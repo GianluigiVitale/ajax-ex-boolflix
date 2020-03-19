@@ -5,6 +5,54 @@
     box-sizing: border-box;
 }
 
+input {
+    border: none;
+}
+
+input:focus {
+    outline: none;
+}
+
+header {
+    background-color: black;
+    height: 80px;
+}
+
+.container {
+    height: 100%;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container p {
+    color: red;
+    font-size: 32px;
+}
+
+.input-box {
+    background-color: white;
+    border-radius: 25px;
+}
+
+.input-box input {
+    width: 200px;
+    padding: 10px;
+    margin-left: 15px;
+    border-radius: 25px;
+}
+
+.input-box .fa-search {
+    padding: 10px;
+    padding-right: 25px;
+}
+
+.fa-search:hover {
+    cursor: pointer;
+}
+
+
 .info-film-serietv {
     margin: 25px;
 }
