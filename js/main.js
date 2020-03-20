@@ -2,6 +2,35 @@
     var source = $('#template-film-serietv').html();    // Handlebars
     var template = Handlebars.compile(source);
 
+    $(document).on('click', '.contenuto', function() {
+        var idFilm = $(this).find('.id').text();
+        console.log($(this).find('.attori').text());
+        // console.log(idFilm);
+        $.ajax({
+            url: 'https://api.themoviedb.org/3/movie/' + idFilm + '/credits',
+            data: {
+                api_key: '6bd6b0823733332d6f67f8c58faac567'
+            },
+            method: 'GET',
+            success: function (data) {
+                var cast = data.cast;
+                // console.log(cast);
+                for (var i = 0; i < 5; i++) {
+                    var attore = cast[i].name;
+                    console.log(attore);
+
+                    var valoriFilm = {
+                        attori: attore
+                    }
+                    var filmTemplate = template(valoriFilm);
+                    $('.ricerca-utente-film').append(filmTemplate);
+                }
+            },
+            error: function () {
+                alert('errore generico');
+            }
+        });
+    });
 
     $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
         if (event.keyCode === 13) {             // se si preme il tasto invio
@@ -10,18 +39,18 @@
     });
 
 
-    $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
+    // $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
         if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
             $('.ricerca-utente-film').empty();
             $('.ricerca-utente-serieTV').empty();
 
-            chiamataAjax('movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
-            chiamataAjax('tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+            chiamataAjaxSearch('movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
+            chiamataAjaxSearch('tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
         } else {
             alert('Pefavore inserisci un film o serie tv');
         }
-    });
+    // });
 
 
 
@@ -29,7 +58,7 @@
 
 
 
-    function chiamataAjax(url, titolo, titoloOriginale, appendFilmOSerie, valoreInput) {    // FUNZIONE che richiama un film o una serie tv da API MovieDB e la visualizza a schermo (handlebars)
+    function chiamataAjaxSearch(url, titolo, titoloOriginale, appendFilmOSerie, valoreInput) {    // FUNZIONE che richiama un film o una serie tv da API MovieDB e la visualizza a schermo (handlebars)
         var baseUrl = 'https://api.themoviedb.org/3/search/';
         $.ajax({
             url: baseUrl + url,
@@ -43,6 +72,8 @@
                 var films = data.results;
                 for (var i = 0; i < films.length; i++) {
                     var film = films[i];
+                    var filmId = film.id;
+                    // console.log(filmId);
 
                     var stelle = valutazioneStelle(film);
                     var lingua = originalLanguageFlag(film);
@@ -55,7 +86,8 @@
                         titoloOriginale: film[titoloOriginale],
                         lingua: lingua,
                         voto: stelle,
-                        overview: film.overview
+                        overview: film.overview,
+                        id: film.id
                     }
                     var filmTemplate = template(valoriFilm);
                     $(appendFilmOSerie).append(filmTemplate);
