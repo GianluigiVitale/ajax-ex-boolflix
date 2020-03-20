@@ -16,8 +16,8 @@
             $('.ricerca-utente-film').empty();
             $('.ricerca-utente-serieTV').empty();
 
-            chiamataAjax('https://api.themoviedb.org/3/search/movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
-            chiamataAjax('https://api.themoviedb.org/3/search/tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+            chiamataAjax('movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
+            chiamataAjax('tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
         } else {
             alert('Pefavore inserisci un film o serie tv');
         }
@@ -30,8 +30,9 @@
 
 
     function chiamataAjax(url, titolo, titoloOriginale, appendFilmOSerie, valoreInput) {    // FUNZIONE che richiama un film o una serie tv da API MovieDB e la visualizza a schermo (handlebars)
+        var baseUrl = 'https://api.themoviedb.org/3/search/';
         $.ajax({
-            url: url,
+            url: baseUrl + url,
             data: {
                 api_key: '6bd6b0823733332d6f67f8c58faac567',
                 query: valoreInput,
@@ -44,7 +45,7 @@
                     var film = films[i];
 
                     var stelle = valutazioneStelle(film);
-                    var lingua = originalLanguage(film);
+                    var lingua = originalLanguageFlag(film);
                     var copertina = controlloCopertina(film);
 
                     var valoriFilm = {
@@ -81,25 +82,20 @@
     }
 
 
-    function originalLanguage(film) {       // FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
+    function originalLanguageFlag(film) {       // FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
         var lingua = '';
-        if (film.original_language == 'it') {
-            lingua += ('<img class="lingua-originale" src="img/italy.png" alt="italy flag">');
-        } else if (film.original_language == 'en') {
-            lingua += ('<img class="lingua-originale" src="img/united-states.png" alt="united-states flag">');
-        } else if (film.original_language == 'fr') {
-            lingua += ('<img class="lingua-originale" src="img/france.png" alt="france flag">');
-        } else if (film.original_language == 'es') {
-            lingua += ('<img class="lingua-originale" src="img/spain.png" alt="spain flag">');
-        } else if (film.original_language == 'de') {
-            lingua += ('<img class="lingua-originale" src="img/germany.png" alt="germany flag">');
-        } else if (film.original_language == 'zh') {
-            lingua += ('<img class="lingua-originale" src="img/china.png" alt="china flag">');
-        } else {
-            lingua += ('<img class="lingua-originale" src="img/world.png" alt="world icon">');
+        var linguePresenti = ['it','en', 'fr', 'es', 'de', 'zh'];
+        for (var i = 0; i < linguePresenti.length; i++) {
+            if (linguePresenti[i] == film.original_language) {
+                lingua += linguePresenti[i];
+            }
+        }
+        if (lingua == '') {
+            lingua += 'world';
         }
         return lingua;
     }
+
 
     function controlloCopertina(film) {      // FUNZIONE che controlla se e' presente una copertina (la visualizza) altrimenti imposta una copertina generica
         var dimensioneImmagine = 'w342';
