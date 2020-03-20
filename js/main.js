@@ -2,35 +2,29 @@
     var source = $('#template-film-serietv').html();    // Handlebars
     var template = Handlebars.compile(source);
 
-    $(document).on('click', '.contenuto', function() {
+    $(document).on('mouseover', '.contenuto', function() {  // quando si entra con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
         var idFilm = $(this).find('.id').text();
-        console.log($(this).find('.attori').text());
-        // console.log(idFilm);
-        $.ajax({
-            url: 'https://api.themoviedb.org/3/movie/' + idFilm + '/credits',
-            data: {
-                api_key: '6bd6b0823733332d6f67f8c58faac567'
-            },
-            method: 'GET',
-            success: function (data) {
-                var cast = data.cast;
-                // console.log(cast);
-                for (var i = 0; i < 5; i++) {
-                    var attore = cast[i].name;
-                    console.log(attore);
-
-                    var valoriFilm = {
-                        attori: attore
+        var that = $(this);
+        if ($(that).find('.attori').text() == '') {     // se non si e' gia' entrati con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/movie/' + idFilm + '/credits',
+                data: {
+                    api_key: '6bd6b0823733332d6f67f8c58faac567'
+                },
+                method: 'GET',
+                success: function (data) {
+                    var cast = data.cast;
+                    var attori = '';
+                    for (var i = 0; i < 5; i++) {
+                        var attore = cast[i].name;
+                        attori += attore + ', ';
                     }
-                    var filmTemplate = template(valoriFilm);
-                    $('.ricerca-utente-film').append(filmTemplate);
+                    $(that).find('.attori').text(attori);
                 }
-            },
-            error: function () {
-                alert('errore generico');
-            }
-        });
+            });
+        }
     });
+
 
     $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
         if (event.keyCode === 13) {             // se si preme il tasto invio
@@ -39,7 +33,7 @@
     });
 
 
-    // $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
+    $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
         if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
             $('.ricerca-utente-film').empty();
@@ -50,7 +44,7 @@
         } else {
             alert('Pefavore inserisci un film o serie tv');
         }
-    // });
+    });
 
 
 
