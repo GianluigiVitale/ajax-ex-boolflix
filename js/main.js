@@ -2,28 +2,16 @@
     var source = $('#template-film-serietv').html();    // Handlebars
     var template = Handlebars.compile(source);
 
-    $(document).on('mouseover', '.contenuto', function() {  // quando si entra con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
-        var idFilm = $(this).find('.id').text();
+
+    $(document).on('mouseover', '.contenuto', function() {      // quando si entra con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
         var that = $(this);
-        if ($(that).find('.attori').text() == '') {     // se non si e' gia' entrati con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
-            $.ajax({
-                url: 'https://api.themoviedb.org/3/movie/' + idFilm + '/credits',
-                data: {
-                    api_key: '6bd6b0823733332d6f67f8c58faac567'
-                },
-                method: 'GET',
-                success: function (data) {
-                    var cast = data.cast;
-                    var attori = '';
-                    for (var i = 0; i < 5; i++) {
-                        var attore = cast[i].name;
-                        attori += attore + ', ';
-                    }
-                    $(that).find('.attori').text(attori);
-                }
-            });
+        if (that.parent().parent().hasClass('ricerca-utente-film')) {   // se e' un film
+            attoriFilmOSerieTV('movie', that);
+        } else {                                                        // se e' una serie tv
+            attoriFilmOSerieTV('tv', that);
         }
     });
+    // still to fix when there are no actors
 
 
     $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
@@ -132,5 +120,29 @@
         }
         return copertina;
     }
+
+
+    function attoriFilmOSerieTV(movieOrTvSeries, that) {
+        var idFilm = $(that).find('.id').text();
+        if ($(that).find('.attori').text() == '') {     // se non si e' gia' entrati con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/' + movieOrTvSeries + '/' + idFilm + '/credits',
+                data: {
+                    api_key: '6bd6b0823733332d6f67f8c58faac567'
+                },
+                method: 'GET',
+                success: function (data) {
+                    var cast = data.cast;
+                    var attori = '';
+                    for (var i = 0; i < 5; i++) {
+                        var attore = cast[i].name;
+                        attori += attore + ', ';
+                    }
+                    $(that).find('.attori').text(attori);
+                }
+            });
+        }
+    }
+
 
 // });
