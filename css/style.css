@@ -10,9 +10,6 @@ body {
 }
 
 /* stile classi generali */
-.inline {
-    display: inline-block;
-}
 
 .bold {
     font-weight: 600;
@@ -116,6 +113,7 @@ header {
     height: calc(100% - 2px);
     z-index: 1;
     padding: 15px;
+    overflow: auto;
 }
 
 .contenuto p {
