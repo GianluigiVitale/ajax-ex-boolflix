@@ -148,3 +148,37 @@ header {
     bottom: 0;
     right: 0;
 } */
+
+
+
+@media screen and (max-width: 500px) {
+    .input-box input {
+        width: 100px;
+    }
+
+    .input-box .fa-search {
+        padding-right: 15px;
+    }
+
+    .container p {
+        font-size: 24px;
+    }
+
+    .info-film-serietv {
+        margin: 5px;
+        margin-bottom: 15px;
+        position: relative;
+        width: 250px;
+        height: 375px;
+    }
+
+    .copertina {
+        border: 1px solid white;
+        width: 250px;
+        height: 375px;
+    }
+
+    .contenuto p {
+        font-size: 12px;
+    }
+}
