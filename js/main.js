@@ -21,7 +21,7 @@
     });
 
 
-    $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visuallizano i film e le serie tv che contengono le parole inserite nell'input
+    $('.fa-search').click(function() {      // al click del '.fa-search' viene inviato l'input e si visualizzano i film e le serie tv che contengono le parole inserite nell'input
         var valoreInput = $('input').val();
         if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
             $('.ricerca-utente-film').empty();
@@ -54,12 +54,12 @@
                 var films = data.results;
                 for (var i = 0; i < films.length; i++) {
                     var film = films[i];
-                    var filmId = film.id;
-                    // console.log(filmId);
+                    var filmGenre = film.genre_ids;
 
-                    var stelle = valutazioneStelle(film);
-                    var lingua = originalLanguageFlag(film);
                     var copertina = controlloCopertina(film);
+                    var lingua = originalLanguageFlag(film);
+                    var stelle = valutazioneStelle(film);
+                    var generi = generiCheck(filmGenre, url);
 
                     var valoriFilm = {
                         copertina: copertina,
@@ -69,7 +69,8 @@
                         lingua: lingua,
                         voto: stelle,
                         overview: film.overview,
-                        id: film.id
+                        id: film.id,
+                        generi: generi
                     }
                     var filmTemplate = template(valoriFilm);
                     $(appendFilmOSerie).append(filmTemplate);
@@ -79,6 +80,84 @@
                 alert('errore generico');
             }
         });
+    }
+
+    function generiCheck(filmGenre, url) {
+        var genereFilm = '';
+        if (filmGenre.length > 1) {     // se c'e' piu' di un genere
+            for (var j = 0; j < filmGenre.length; j++) {    // ciclo tutti i generi del film
+                var genereFilmJ = filmGenre[j];
+                // console.log(genereFilmJ);
+
+                $.ajax({
+                    url: 'https://api.themoviedb.org/3/genre/' + url + '/list',
+                    data: {
+                        api_key: '6bd6b0823733332d6f67f8c58faac567',
+                        language: 'it-IT'
+                    },
+                    async: false,
+                    method: 'GET',
+                    success: function (data) {
+                        var genres = data.genres;
+
+                        // console.log(genereFilmJ);
+                        // console.log(j);
+
+                        for (var k = 0; k < genres.length; k++) {   // ciclo tutti i generi dell'API
+                            var genereCicloK = genres[k].id;
+                            // console.log(genereCicloK);
+                            var nomeGenereCicloK = genres[k].name;
+                            // console.log(nomeGenereCicloK);
+
+                            if (genereFilmJ == genereCicloK) {
+                                genereFilm += nomeGenereCicloK + ', ';
+                                console.log(genereFilm);
+                                // console.log(genereFilmJ);
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert('errore generico');
+                    }
+                });
+            }
+        } else if (filmGenre.length == 1) {     // se c'e' solo un genere
+            // console.log(filmGenre[0]);
+            // console.log('ciao');
+
+            $.ajax({
+                url: 'https://api.themoviedb.org/3/genre/' + url + '/list',
+                data: {
+                    api_key: '6bd6b0823733332d6f67f8c58faac567',
+                    language: 'it-IT'
+                },
+                async: false,
+                method: 'GET',
+                success: function (data) {
+                    var genres = data.genres;
+
+                    // console.log(genereFilmJ);
+                    // console.log(j);
+
+                    for (var k = 0; k < genres.length; k++) {   // ciclo tutti i generi dell'API
+                        var genereCicloK = genres[k].id;
+                        // console.log(genereCicloK);
+                        var nomeGenereCicloK = genres[k].name;
+                        // console.log(nomeGenereCicloK);
+
+                        if (filmGenre[0] == genereCicloK) {
+                            genereFilm += nomeGenereCicloK + ', ';
+                            console.log(genereFilm);
+                            // console.log(genereFilmJ);
+                        }
+                    }
+                },
+                error: function () {
+                    alert('errore generico');
+                }
+            });
+        }
+        return genereFilm;
     }
 
 
