@@ -11,7 +11,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js" charset="utf-8"></script>
     </head>
     <body>
-
         <header>        <!-- HEADER -->
             <div class="container">
                 <div class="input-box">
@@ -21,12 +20,20 @@
                 <p>BOOLFLIX</p>
             </div>
         </header>
-
-
+        
+        <div class="scelta-genere">     <!--  Selettore generi -->
+            <select class="genre-selector">
+                <option value="">Filtra per genere:</option>
+            </select>
+        </div>
+        
         <div class="ricerca-utente-film"></div>     <!-- Qua dentro sono posizionati i FILM trovati -->
         <div class="ricerca-utente-serieTV"></div>  <!-- Qua dentro sono posizionati le SERIE TV trovate -->
 
-        <!-- <div class="bottom-page">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
+
+        <!-- sezione SCRIPT -->
+
+
         <script id="template-film-serietv" type="text/x-handlebars-template">    <!-- TEMPLATE HANDLEBARS per film e serie tv -->
             <div class="info-film-serietv">
                 <img class="copertina" src="{{copertina}}" alt="{{copertinaNome}}">
@@ -38,9 +45,14 @@
                     <p><span class="bold">Overview: </span> {{overview}}</p>
                     <p><span class="bold">Attori: </span><span class="attori"></span></p>
                     <p><span class="hidden id">{{id}}</p>
-                    <p><span class="bold">Generi: </span>{{generi}}</p>
+                    <p class="generi"><span class="bold">Generi: </span>{{generi}}</p>
                 </div>
             </div>
+        </script>
+
+
+        <script id="scelta-generi" type="text/x-handlebars-template">    <!-- TEMPLATE HANDLEBARS per scelta genere -->
+            <option value="{{valoreGenere}}">{{valoreGenere}}</option>
         </script>
 
 

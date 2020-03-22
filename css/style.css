@@ -10,7 +10,6 @@ body {
 }
 
 /* stile classi generali */
-
 .bold {
     font-weight: 600;
 }
@@ -37,12 +36,11 @@ input:focus {
 header {
     background-color: black;
     height: 80px;
-    margin-bottom: 50px;
 }
 
 .container {
     height: 100%;
-    padding: 25px;
+    padding: 0 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,6 +72,13 @@ header {
     cursor: pointer;
 }
 /* FINE STILE HEADER */
+
+
+.scelta-genere {
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+}
 
 
 .ricerca-utente-film, .ricerca-utente-serieTV {
@@ -137,23 +142,16 @@ header {
 /* FINE STILE TEMPLATE HANDLEBARS */
 
 
-
-
-
 .hidden {
     display: none;
 }
-/* .bottom-page {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-} */
 
 
-
+/* MEDIA QUERY */
 @media screen and (max-width: 500px) {
     .input-box input {
         width: 100px;
+        margin-left: 10px;
     }
 
     .input-box .fa-search {
