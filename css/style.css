@@ -76,10 +76,17 @@ header {
 
 .scelta-genere {
     margin: 25px 0;
-    display: flex;
+    display: none;
     justify-content: center;
 }
 
+.nessun-risultato {
+    display: none;
+    text-align: center;
+    padding: 25px 0;
+    font-size: 18px;
+    color: white;
+}
 
 .ricerca-utente-film, .ricerca-utente-serieTV {
     display: flex;
@@ -144,6 +151,10 @@ header {
 
 .hidden {
     display: none;
+}
+
+.visible {
+    display: flex;
 }
 
 

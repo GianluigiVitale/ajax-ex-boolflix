@@ -34,6 +34,14 @@
             chiamataAjaxSearch('movie', valoreInput);
             chiamataAjaxSearch('tv', valoreInput);
 
+            if ($('.ricerca-utente-film').is(':empty')) {   // se NON e' stato trovato un film/serie tv viene nascosto il pulsante 'filtra per genere' e viene mostrata la scritta 'nessun risultato'
+                $('.scelta-genere').removeClass('visible')
+                $('.nessun-risultato').show();
+            } else {                                        // altrimenti  viene mostrato il pulsante 'filtra per genere' e viene nascosta la scritta 'nessun risultato'
+                $('.scelta-genere').addClass('visible');
+                $('.nessun-risultato').hide();
+            }
+
         } else {           // se l'input non ha contenuto
             alert('Pefavore inserisci un film o serie tv');
         }
@@ -180,9 +188,14 @@
                             // console.log(nomeGenereCicloK);
 
                             if (genereFilmJ == genereCicloK) {  // prendo l'ID del genere del film e quando e' uguale all'ID della lista dei generi dell'API, prendo il valore testuale del genere
-                                genereFilm += nomeGenereCicloK + ', ';
+                                genereFilm += nomeGenereCicloK;
                                 // console.log(genereFilm);     // DA USARE PER VEDERE I GENERI DEL FILM/SERIETV
                                 // console.log(genereFilmJ);
+                                if (j < (filmGenre.length - 1)) {  // per non aggiungere la virgola anche all'ultimo genere, se j < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
+                                    genereFilm += ', ';
+                                } else {
+                                    genereFilm += '.';
+                                }
                             }
                         }
                     },
@@ -216,7 +229,7 @@
                         // console.log(nomeGenereCicloK);
 
                         if (filmGenre[0] == genereCicloK) {
-                            genereFilm += nomeGenereCicloK + ', ';
+                            genereFilm += nomeGenereCicloK + '.';
                             // console.log(genereFilm);
                             // console.log(genereFilmJ);
                         }
@@ -281,7 +294,13 @@
                     var attori = '';
                     for (var i = 0; i < 5; i++) {   // prende i primi 5 attori
                         var attore = cast[i].name;
-                        attori += attore + ', ';
+                        attori += attore;
+
+                        if (i < (5 - 1)) {  // per non aggiungere la virgola anche all'ultimo attore, se i < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
+                            attori += ', ';
+                        } else {
+                            attori += '.';
+                        }
                     }
                     $(that).find('.attori').text(attori);
                 }
