@@ -31,10 +31,10 @@
             $('.ricerca-utente-serieTV').empty();
             $('.genre-selector option').not('option:first').remove();   // svuoto gli eventuali contenuti dei div e rimuovo tutte le opzioni tranne la prima (perche' la prima e' il filtro generale che e' sempre presente)
 
-            chiamataAjaxSearch('movie', 'title', 'original_title', '.ricerca-utente-film', valoreInput);
-            chiamataAjaxSearch('tv', 'name', 'original_name', '.ricerca-utente-serieTV', valoreInput);
+            chiamataAjaxSearch('movie', valoreInput);
+            chiamataAjaxSearch('tv', valoreInput);
 
-        } else {        // // se l'input non ha contenuto
+        } else {           // se l'input non ha contenuto
             alert('Pefavore inserisci un film o serie tv');
         }
     });
@@ -62,7 +62,7 @@
 
 
 
-    function chiamataAjaxSearch(url, titolo, titoloOriginale, appendFilmOSerie, valoreInput) {    // FUNZIONE che richiama un film o una serie tv da API MovieDB e la visualizza a schermo (handlebars)
+    function chiamataAjaxSearch(url, valoreInput) {    // FUNZIONE che richiama un film o una serie tv da API MovieDB e la visualizza a schermo (handlebars)
         var baseUrl = 'https://api.themoviedb.org/3/search/';
         $.ajax({
             url: baseUrl + url,
@@ -74,27 +74,34 @@
             async: false,       // da rimuovere, trovare un altra soluzione
             method: 'GET',
             success: function (data) {
+
+                if (url == 'movie') {
+                    var titolo = 'title';
+                    var titoloOriginale = 'original_title';
+                    var appendFilmOSerie = '.ricerca-utente-film';
+                } else {
+                    var titolo = 'name';
+                    var titoloOriginale = 'original_name';
+                    var appendFilmOSerie = '.ricerca-utente-serieTV';
+                }
+
                 var films = data.results;
                 for (var i = 0; i < films.length; i++) {    // ciclo tutti i film trovati grazie alla ricerca
                     var film = films[i];
                     var filmGenre = film.genre_ids;
 
-                    var copertina = controlloCopertina(film);
-                    var lingua = originalLanguageFlag(film);
-                    var stelle = valutazioneStelle(film);
-                    var generi = generiCheck(filmGenre, url);
-
                     var valoriFilm = {
-                        copertina: copertina,
+                        copertina: controlloCopertina(film),
                         copertinaNome: 'copertina di ' + film[titolo],
                         titolo: film[titolo],
                         titoloOriginale: film[titoloOriginale],
-                        lingua: lingua,
-                        voto: stelle,
+                        lingua: originalLanguageFlag(film),
+                        voto: valutazioneStelle(film),
                         overview: film.overview,
                         id: film.id,
-                        generi: generi
+                        generi: generiCheck(filmGenre, url)
                     }
+
                     var filmTemplate = template(valoriFilm);
                     $(appendFilmOSerie).append(filmTemplate);
                 }
@@ -121,12 +128,10 @@
     function originalLanguageFlag(film) {       // FUNZIONE che serve per visualizzare la bandiera dello stato da cui proviene il film / serie tv
         var lingua = '';
         var linguePresenti = ['it','en', 'fr', 'es', 'de', 'zh'];
-        for (var i = 0; i < linguePresenti.length; i++) {
-            if (linguePresenti[i] == film.original_language) {
-                lingua += linguePresenti[i];
-            }
-        }
-        if (lingua == '') {
+
+        if (linguePresenti.includes(film.original_language)) {
+            lingua += film.original_language;
+        } else {
             lingua += 'world';
         }
         return lingua;
