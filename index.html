@@ -21,16 +21,42 @@
             </div>
         </header>
 
-        <div class="scelta-genere">     <!--  Selettore generi -->
+        <!-- <div class="scelta-genere">     Selettore generi
             <select class="genre-selector">
                 <option value="">Filtra per genere:</option>
+                <option value="Action & Adventure">Action & Adventure</option>
+                <option value="Animazione">Animazione</option>
+                <option value="Avventura">Avventura</option>
+                <option value="Azione">Azione</option>
+                <option value="Commedia">Commedia</option>
+                <option value="Crime">Crime</option>
+                <option value="Documentario">Documentario</option>
+                <option value="Dramma">Dramma</option>
+                <option value="Famiglia">Famiglia</option>
+                <option value="Fantascienza">Fantascienza</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Guerra">Guerra</option>
+                <option value="Horror">Horror</option>
+                <option value="Kids">Kids</option>
+                <option value="Mistero">Mistero</option>
+                <option value="Musica">Musica</option>
+                <option value="News">News</option>
+                <option value="Reality">Reality</option>
+                <option value="Romance">Romance</option>
+                <option value="Sci-Fi & Fantasy">Sci-Fi & Fantasy</option>
+                <option value="Soap">Soap</option>
+                <option value="Storia">Storia</option>
+                <option value="Talk">Talk</option>
+                <option value="televisione film">televisione film</option>
+                <option value="War & Politics">War & Politics</option>
+                <option value="Western">Western</option>
             </select>
-        </div>
-        
+        </div> -->
+
         <div class="nessun-risultato">  <!-- sritta che appare se non e' stato trovato alcun film / serie tv -->
             <p>Non è stato trovato alcun risultato.</p>
         </div>
-        
+
         <div class="ricerca-utente-film"></div>     <!-- Qua dentro sono posizionati i FILM trovati -->
         <div class="ricerca-utente-serieTV"></div>  <!-- Qua dentro sono posizionati le SERIE TV trovate -->
 
@@ -48,8 +74,8 @@
                     <p><span class="bold">Voto: </span> {{{voto}}}</p>
                     <p><span class="bold">Overview: </span> {{overview}}</p>
                     <p><span class="bold">Attori: </span><span class="attori"></span></p>
+                    <p><span class="bold">Generi: </span><span class="generi"></span></p>
                     <p><span class="hidden id">{{id}}</p>
-                    <p class="generi"><span class="bold">Generi: </span>{{generi}}</p>
                 </div>
             </div>
         </script>

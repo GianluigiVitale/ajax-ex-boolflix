@@ -2,24 +2,12 @@
     var source = $('#template-film-serietv').html();    // Handlebars
     var template = Handlebars.compile(source);
 
-    var valoreGenere = $('#scelta-generi').html();    // Handlebars
-    var templateSceltaGenere = Handlebars.compile(valoreGenere);
-
-
     $(document).on('mouseover', '.contenuto', function() {      // quando si entra con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
         var that = $(this);
         if (that.parent().parent().hasClass('ricerca-utente-film')) {   // se e' un film
-            attoriFilmOSerieTV('movie', that);
+            generiEAttoriFilmOSerieTV('movie', that);
         } else {                                                        // se e' una serie tv
-            attoriFilmOSerieTV('tv', that);
-        }
-    });
-    // still to fix when there are no actors
-
-
-    $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
-        if (event.keyCode === 13) {             // se si preme il tasto invio
-            $('.fa-search').click();
+            generiEAttoriFilmOSerieTV('tv', that);
         }
     });
 
@@ -29,18 +17,10 @@
         if (valoreInput.trim().length > 0) {         // se l'input ha contenuto
             $('.ricerca-utente-film').empty();
             $('.ricerca-utente-serieTV').empty();
-            $('.genre-selector option').not('option:first').remove();   // svuoto gli eventuali contenuti dei div e rimuovo tutte le opzioni tranne la prima (perche' la prima e' il filtro generale che e' sempre presente)
+            $('select').val($('select option:first').val());    // imposto la prima opzione del filtro dei generi
 
             chiamataAjaxSearch('movie', valoreInput);
             chiamataAjaxSearch('tv', valoreInput);
-
-            if ($('.ricerca-utente-film').is(':empty')) {   // se NON e' stato trovato un film/serie tv viene nascosto il pulsante 'filtra per genere' e viene mostrata la scritta 'nessun risultato'
-                $('.scelta-genere').removeClass('visible')
-                $('.nessun-risultato').show();
-            } else {                                        // altrimenti  viene mostrato il pulsante 'filtra per genere' e viene nascosta la scritta 'nessun risultato'
-                $('.scelta-genere').addClass('visible');
-                $('.nessun-risultato').hide();
-            }
 
         } else {           // se l'input non ha contenuto
             alert('Pefavore inserisci un film o serie tv');
@@ -48,21 +28,34 @@
     });
 
 
-    $('.genre-selector').change(function() {    // quando viene selezionato un genere se il film / serie tv lo include viene mostrato altrimenti viene nascosto
-        var selectedGenre = $(this).val();
-        if (selectedGenre == '') {
-            $('.info-film-serietv').show();
-        } else {
-            $('.info-film-serietv').each(function () {
-                var thisAllGenere = $(this).find('.generi').text();
-                if (thisAllGenere.includes(selectedGenre)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+    $("input").keyup(function(event) {    // quando viene rilasciato un tasto dentro 'input'
+        if (event.keyCode === 13) {             // se si preme il tasto invio
+            $('.fa-search').click();
         }
     });
+
+
+    // $('.genre-selector').change(function() {    // quando viene selezionato un genere se il film / serie tv lo include viene mostrato altrimenti viene nascosto
+    //     var selectedGenre = $(this).val();
+    //     if (selectedGenre == '') {
+    //         $('.info-film-serietv').show();
+    //     } else {
+    //         $('.info-film-serietv').each(function () {
+    //             var thisAllGenere = $(this).find('.generi').text();
+    //             if (thisAllGenere.includes(selectedGenre)) {
+    //                 $(this).show();
+    //             } else {
+    //                 $(this).hide();
+    //             }
+    //         });
+    //     }
+    //
+    //     if ($('.info-film-serietv').is(':visible')) {    // se dopo aver cambiato il filtro dei generi non c'e' alcun film/serie tv disponibile mostro il div nessun risultato
+    //         $('.nessun-risultato').hide();
+    //     } else {
+    //         $('.nessun-risultato').show();
+    //     }
+    // });
 
 
 
@@ -79,7 +72,6 @@
                 query: valoreInput,
                 language: 'it-IT'
             },
-            async: false,       // da rimuovere, trovare un altra soluzione
             method: 'GET',
             success: function (data) {
 
@@ -107,13 +99,19 @@
                         voto: valutazioneStelle(film),
                         overview: film.overview,
                         id: film.id,
-                        generi: generiCheck(filmGenre, url)
                     }
 
                     var filmTemplate = template(valoriFilm);
                     $(appendFilmOSerie).append(filmTemplate);
                 }
-                aggiungiGenereAlFiltro(url);
+
+                if (($('.ricerca-utente-film').is(':empty')) && ($('.ricerca-utente-serieTV').is(':empty'))) {   // se NON e' stato trovato un film/serie tv viene nascosto il pulsante 'filtra per genere' e viene mostrata la scritta 'nessun risultato'
+                    $('.scelta-genere').removeClass('visible')
+                    $('.nessun-risultato').show();
+                } else {                                        // altrimenti  viene mostrato il pulsante 'filtra per genere' e viene nascosta la scritta 'nessun risultato'
+                    $('.scelta-genere').addClass('visible');
+                    $('.nessun-risultato').hide();
+                }
             },
             error: function () {
                 alert('errore generico');
@@ -160,153 +158,55 @@
     }
 
 
-    function generiCheck(filmGenre, url) {      // Questa funzione tramuta l'ID dei vari generi di un film/serietv in valore testuale corrispondente
-        var genereFilm = '';
-        if (filmGenre.length > 1) {     // se c'e' piu' di un genere
-            for (var j = 0; j < filmGenre.length; j++) {    // ciclo tutti i generi del film
-                var genereFilmJ = filmGenre[j];
-                // console.log(genereFilmJ);
-
-                $.ajax({
-                    url: 'https://api.themoviedb.org/3/genre/' + url + '/list',
-                    data: {
-                        api_key: '6bd6b0823733332d6f67f8c58faac567',
-                        language: 'it-IT'
-                    },
-                    async: false,
-                    method: 'GET',
-                    success: function (data) {
-                        var genres = data.genres;
-
-                        // console.log(genereFilmJ);
-                        // console.log(j);
-
-                        for (var k = 0; k < genres.length; k++) {   // ciclo tutti i generi dell'API
-                            var genereCicloK = genres[k].id;
-                            // console.log(genereCicloK);
-                            var nomeGenereCicloK = genres[k].name;
-                            // console.log(nomeGenereCicloK);
-
-                            if (genereFilmJ == genereCicloK) {  // prendo l'ID del genere del film e quando e' uguale all'ID della lista dei generi dell'API, prendo il valore testuale del genere
-                                genereFilm += nomeGenereCicloK;
-                                // console.log(genereFilm);     // DA USARE PER VEDERE I GENERI DEL FILM/SERIETV
-                                // console.log(genereFilmJ);
-                                if (j < (filmGenre.length - 1)) {  // per non aggiungere la virgola anche all'ultimo genere, se j < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
-                                    genereFilm += ', ';
-                                } else {
-                                    genereFilm += '.';
-                                }
-                            }
-                        }
-                    },
-                    error: function () {
-                        alert('errore generico');
-                    }
-                });
-            }
-        } else if (filmGenre.length == 1) {     // se c'e' solo un genere
-            // console.log(filmGenre[0]);
-            // console.log('ciao');
-
+    function generiEAttoriFilmOSerieTV(movieOrTvSeries, that) {    // FUNZIONE che prende dall'API i primi 5 attori e li aggiunge all'HTML
+        var idFilm = $(that).find('.id').text();
+        if (($(that).find('.attori').text() == '') && ($(that).find('.generi').text() == '')) {     // se non si e' gia' entrati con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML e aggiunge i generi del FILM/serietv
             $.ajax({
-                url: 'https://api.themoviedb.org/3/genre/' + url + '/list',
+                url: 'https://api.themoviedb.org/3/' + movieOrTvSeries + '/' + idFilm,
                 data: {
                     api_key: '6bd6b0823733332d6f67f8c58faac567',
-                    language: 'it-IT'
+                    language: 'it-IT',
+                    append_to_response: 'credits'
                 },
-                async: false,
                 method: 'GET',
                 success: function (data) {
+
+                    var cast = data.credits.cast;
+                    if (cast.length > 4) {  // dato che per alcuni film non sono presenti attori se non metto questo if il codice mi va in errore e non esegue la parte successiva dei generi
+                        var attori = '';
+                        for (var i = 0; i < 5; i++) {   // prende i primi 5 attori
+                            var attore = cast[i].name;
+                            attori += attore;
+
+                            if (i < (5 - 1)) {  // per non aggiungere la virgola anche all'ultimo attore, se i < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
+                                attori += ', ';
+                            } else {
+                                attori += '.';
+                            }
+                        }
+                        $(that).find('.attori').text(attori);
+                    }
+
+                    var genereFilm = '';
                     var genres = data.genres;
-
-                    // console.log(genereFilmJ);
-                    // console.log(j);
-
                     for (var k = 0; k < genres.length; k++) {   // ciclo tutti i generi dell'API
-                        var genereCicloK = genres[k].id;
-                        // console.log(genereCicloK);
                         var nomeGenereCicloK = genres[k].name;
                         // console.log(nomeGenereCicloK);
 
-                        if (filmGenre[0] == genereCicloK) {
-                            genereFilm += nomeGenereCicloK + '.';
-                            // console.log(genereFilm);
-                            // console.log(genereFilmJ);
-                        }
-                    }
-                },
-                error: function () {
-                    alert('errore generico');
-                }
-            });
-        }
-        return genereFilm;
-    }
-
-
-    function aggiungiGenereAlFiltro(url) {     // FUNZIONE che cicla tutti i generi dell'API e aggiunge al filtro 'genre-selector' i generi che trova tra i film / serie tv
-        $.ajax({
-            url: 'https://api.themoviedb.org/3/genre/' + url + '/list',
-            data: {
-                api_key: '6bd6b0823733332d6f67f8c58faac567',
-                language: 'it-IT'
-            },
-            async: false,
-            method: 'GET',
-            success: function (data) {
-                var genres = data.genres;
-
-
-                var contenutoGeneri = $('.contenuto .generi').text();
-                var controlloPresenzaGenere = $('.genre-selector option').text();
-
-                for (var k = 0; k < genres.length; k++) {   // ciclo tutti i generi dell'API
-                    var nomeGenereCicloK = genres[k].name;
-
-                    var popoloGeneri = {
-                        valoreGenere: nomeGenereCicloK
-                    }
-
-                    if ((contenutoGeneri.includes(nomeGenereCicloK)) && (!(controlloPresenzaGenere.includes(nomeGenereCicloK)))) {  // SE tra i film/serie tv e' presente il genere E SE il genere NON e' stato gia' aggiunto tra le opzioni, aggiunge il genere alle opzioni
-                        var genereTemplate = templateSceltaGenere(popoloGeneri);
-                        $('.genre-selector').append(genereTemplate);
-                    }
-                }
-            },
-            error: function () {
-                alert('errore generico');
-            }
-        });
-    }
-
-
-    function attoriFilmOSerieTV(movieOrTvSeries, that) {    // FUNZIONE che prende dall'API i primi 5 attori e li aggiunge all'HTML
-        var idFilm = $(that).find('.id').text();
-        if ($(that).find('.attori').text() == '') {     // se non si e' gia' entrati con il mouse su .contenuto prende dall'API i primi 5 attori e li aggiunge all'HTML
-            $.ajax({
-                url: 'https://api.themoviedb.org/3/' + movieOrTvSeries + '/' + idFilm + '/credits',
-                data: {
-                    api_key: '6bd6b0823733332d6f67f8c58faac567'
-                },
-                method: 'GET',
-                success: function (data) {
-                    var cast = data.cast;
-                    var attori = '';
-                    for (var i = 0; i < 5; i++) {   // prende i primi 5 attori
-                        var attore = cast[i].name;
-                        attori += attore;
-
-                        if (i < (5 - 1)) {  // per non aggiungere la virgola anche all'ultimo attore, se i < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
-                            attori += ', ';
+                        genereFilm += nomeGenereCicloK;
+                        // console.log(genereFilm);     // DA USARE PER VEDERE I GENERI DEL FILM/SERIETV
+                        if (k < (genres.length - 1)) {  // per non aggiungere la virgola anche all'ultimo genere, se k < (della lunghezza dell'array -1) aggiungo una virgola altrimenti un punto
+                            genereFilm += ', ';
                         } else {
-                            attori += '.';
+                            genereFilm += '.';
                         }
                     }
-                    $(that).find('.attori').text(attori);
+                    $(that).find('.generi').text(genereFilm);
                 }
             });
         }
     }
+
 
 
 // });
